@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>three.js webgl - buffergeometry - lines drawrange</title>
+		<title>locker</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no,
 			minimum-scale=1.0, maximum-scale=1.0">
@@ -28,6 +28,12 @@
 		</script>
 		<script type="module">
  		import * as THREE from 'three';
+
+		// import a json 
+
+		 import { lockerDoors }  from './lockerVars.js'
+		
+		console.log('...start', lockerDoors) 
 			
 		import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 		import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
@@ -36,7 +42,7 @@
 
 		let scene2, renderer2;
 
-		const frustumSize = 500;
+		const frustumSize = 800;
 
 		const raycaster = new THREE.Raycaster();
 		const clickMouse = new THREE.Vector2();
@@ -58,22 +64,6 @@
 			
 		}
 
-		function createBox() {
-			let scale = {x:6, y:6, z:6}
-			let pos = {x:15, y: scale.y / 2, z:15}
-
-			let box = new THREE.Mesh(new THREE.BoxBufferGeometry(),
-				new THREE.MeshPhongMaterial({color: 0xDC143C}));
-
-			box.position.set(pos.x, pos.y, pos.z)
-			box.scale.set(scale.x, scale.y, scale.z)
-			box.castShadow = true
-			box.receiveShadow = true
-			scene.add(box)
-			
-			box.userData.draggable = true
-		}
-
 		function init() {
 
 			const aspect = window.innerWidth / window.innerHeight;
@@ -93,150 +83,7 @@
 			const maxColumnHeight = 200
 			const length = 200
 			const width = 90
-			const lockerDoors = [
-				{
-					"doorNumber": 1,
-					"width": width,
-					"height": "33",
-					"length": length,
-					"status": "active",
-					"column": 1
-					
-				},
-				{
-					"doorNumber": 2,
-					"width": width,
-					"height": "50",
-					"length": length,
-					"status": "active",
-					"column": 1
-				},
-				{
-					"doorNumber": 3,
-					"width": width,
-					"height": "22",
-					"length": length,
-					"status": "active",
-					"column": 1
-				},
-				{
-					"doorNumber": 4,
-					"width": width,
-					"height": "23",
-					"length": length,
-					"status": "active",
-					"column": 1
-					
-				},
-				{
-					"doorNumber": 5,
-					"width": width,
-					"height": "35",
-					"length": length,
-					"status": "inactive",
-					"column": 1
-				},
-				{
-					"doorNumber": 6,
-					"width": width,
-					"height": "23",
-					"length": length,
-					"status": "active",
-					"column": 1
-				}, 
-				{
-					"doorNumber": 8,
-					"width": width,
-					"height": "40",
-					"length": length,
-					"status": "active",
-					"column": 2
-				},
-				{
-					"doorNumber": 9,
-					"width": width,
-					"height": "33",
-					"length": length,
-					"status": "active",
-					"column": 2
-				},
-				{
-					"doorNumber": 10,
-					"width": width,
-					"height": "30",
-					"length": length,
-					"status": "active",
-					"column": 2
-				},
-				,
-				{
-					"doorNumber": 11,
-					"width": width,
-					"height": "23",
-					"length": length,
-					"status": "active",
-					"column": 2
-				},
-				{
-					"doorNumber": 12,
-					"width": width,
-					"height": "55",
-					"length": length,
-					"status": "active",
-					"column": 2
-				},
-				{
-					"doorNumber": 13,
-					"width": width,
-					"height": "55",
-					"length": length,
-					"status": "active",
-					"column": 3
-				},
-				{
-					"doorNumber": 14,
-					"width": width,
-					"height": "55",
-					"length": length,
-					"status": "active",
-					"column": 3
-				},
-				{
-					"doorNumber": 15,
-					"width": width,
-					"height": "55",
-					"length": length,
-					"status": "active",
-					"column": 3
-				},
-				{
-					"doorNumber": 16,
-					"width": width,
-					"height": "55",
-					"length": length,
-					"status": "active",
-					"column": 3
-				},
-				{
-					"doorNumber": 17,
-					"width": width,
-					"height": "44",
-					"length": length,
-					"status": "active",
-					"column": 4
-				},
-				{
-					"doorNumber": 18,
-					"width": width,
-					"height": "33",
-					"length": length,
-					"status": "inactive",
-					"column": 4
-				}
-
-			]
-
-			const columns = [...new Set(lockerDoors.map(d => d.column))].filter(c=> c !== undefined);
+ 			const columns = [...new Set(lockerDoors.map(d => d.column))].filter(c=> c !== undefined);
  			const isPairColumns = columns.length % 2 == 0
 			const middleColumn = !isPairColumns
 				? ((columns.length - 1 )/ 2) + 1
