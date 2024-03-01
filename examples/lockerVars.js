@@ -7,6 +7,40 @@ export const locker = {
 const length = 200;
 const width = 90;
 
+const column0Doors = [
+  {
+    width: 33,
+    height: 33,
+    length: 33,
+    status: "active",
+    doorNumber: 1,
+  },
+  {
+    width: 33,
+    height: 33,
+    length: 33,
+    status: "active",
+    doorNumber: 2,
+  },
+];
+
+const column1Doors = [
+  {
+    w: 33,
+    h: 33,
+    l: 33,
+    status: "active",
+    doorNumber: 3,
+  },
+  {
+    width: 33,
+    height: 33,
+    length: 33,
+    status: "active",
+    doorNumber: 4,
+  },
+];
+
 export const locker2 = {
   bodies: [
     {
@@ -59,43 +93,8 @@ export const locker2 = {
         },
       ],
     },
- 
   ],
 };
-
-const column0Doors = [
-  {
-    width: 33,
-    height: 33,
-    length: 33,
-    status: "active",
-    doorNumber: 1,
-  },
-  {
-    width: 33,
-    height: 33,
-    length: 33,
-    status: "active",
-    doorNumber: 2,
-  },
-];
-
-const column1Doors = [
-  {
-    w: 33,
-    h: 33,
-    l: 33,
-    status: "active",
-    doorNumber: 3,
-  },
-  {
-    width: 33,
-    height: 33,
-    length: 33,
-    status: "active",
-    doorNumber: 4,
-  },
-];
 
 export const lockerDoors = [
   {

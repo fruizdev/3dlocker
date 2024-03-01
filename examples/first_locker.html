@@ -61,6 +61,10 @@
           const myCLass = `.my-door-class-${doorNumber}`;
 
           const color = document.querySelector(myCLass).style.background;
+          if (color === "red") {
+            console.log("Puerta inactiva");
+            return;
+          }
           if (color === "green") {
             document.querySelector(myCLass).style.background = "orange";
           } else {
@@ -108,7 +112,7 @@
           side: THREE.DoubleSide,
         });
 
-        const doorColors = { front: "orange", sides: "yellow", back: "black" };
+        const doorColors = { front: "orange", sides: "white", back: "black" };
 
         const maxColumnHeight = 200;
         const length = 200;
@@ -260,7 +264,7 @@
           const element = document.createElement("div");
           element.style.width = width + "px";
           element.style.height = height + "px";
-          element.style.opacity = 0.75;
+          element.style.opacity = door ? 1 : 0.75;
           element.style.background = cssColor;
           element.style.border = "1px dotted black";
 
@@ -279,7 +283,8 @@
             statusText.style.fontSize = " x-small"; */
             element.appendChild(statusText);
 
-            if (door.open) {
+            if (door.status == "inactive") element.style.background = "red";
+            else if (door.open) {
               element.style.background = "green";
             } else {
               element.style.background = "orange";
