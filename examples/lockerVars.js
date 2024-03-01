@@ -15,6 +15,7 @@ export const lockerDoors = [
     length: length,
     status: "inactive",
     column: 1,
+    open: false,
   },
   {
     doorNumber: 2,
@@ -31,6 +32,7 @@ export const lockerDoors = [
     length: length,
     status: "active",
     column: 1,
+    open: true,
   },
   {
     doorNumber: 4,
