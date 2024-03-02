@@ -30,7 +30,7 @@
     </script>
     <script type="module">
       import * as THREE from "three";
-      import { lockerDoors } from "./lockerVars.js";
+      import { lockerDoors, locker2 } from "./lockerVars.js";
 
       console.log("...start", lockerDoors);
 
@@ -45,40 +45,6 @@
       let scene2, renderer2;
 
       const frustumSize = 800;
-
-      const raycaster = new THREE.Raycaster();
-      const clickMouse = new THREE.Vector2();
-      const moveMouse = new THREE.Vector2();
-      var draggable;
-
-      // https://stackoverflow.com/questions/41210750/detect-click-on-mesh-of-3dobject
-      window.addEventListener("click", (e) => {
-        const targetClass = e.target.classList[0];
-        console.log("targetClass", targetClass);
-
-        if (targetClass.includes("my-door-class-")) {
-          const doorNumber = targetClass.split("-").pop("");
-          const myCLass = `.my-door-class-${doorNumber}`;
-
-          const color = document.querySelector(myCLass).style.background;
-          if (color === "red") {
-            console.log("Puerta inactiva");
-            return;
-          }
-          if (color === "green") {
-            document.querySelector(myCLass).style.background = "orange";
-          } else {
-            document.querySelector(myCLass).style.background = "green";
-          }
-        }
-
-        /*  clickMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        clickMouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-        console.log("click", clickMouse);
-
-        raycaster.setFromCamera(clickMouse, camera);
-        const founds = raycaster.intersectObjects(scene.children); */
-      });
 
       init();
       animate();
@@ -112,11 +78,22 @@
           side: THREE.DoubleSide,
         });
 
-        const doorColors = { front: "orange", sides: "white", back: "black" };
+        const doorColors = { front: "gray", sides: "white", back: "black" };
 
-        const maxColumnHeight = 200;
-        const length = 200;
-        const width = 90;
+        locker2.bodies.forEach((body, key1) => {
+          console.log("body", key1 + 1);
+          body.columns.forEach((column, key2) => {
+            console.log("column", key2 + 1);
+            column.doors.forEach((door) => {
+              console.log("door", door.doorNumber);
+            });
+          });
+        });
+
+        const maxColumnHeight = 300;
+        const length = 150;
+        const width = 60;
+
         const columns = [...new Set(lockerDoors.map((d) => d.column))].filter(
           (c) => c !== undefined
         );
@@ -163,7 +140,7 @@
         createPlane(
           500,
           400,
-          "gray",
+          "blue",
           new THREE.Vector3(0, 100, -110),
           new THREE.Euler(0, 0, 0)
         );
@@ -287,7 +264,7 @@
             else if (door.open) {
               element.style.background = "green";
             } else {
-              element.style.background = "orange";
+              element.style.background = "gray";
             }
           }
 
@@ -305,6 +282,25 @@
 
         window.addEventListener("resize", onWindowResize);
       }
+
+      window.addEventListener("click", (e) => {
+        const targetClass = e.target.classList[0];
+        console.log("targetClass", targetClass);
+
+        if (targetClass.includes("my-door-class-")) {
+          const doorNumber = targetClass.split("-").pop("");
+          const myCLass = `.my-door-class-${doorNumber}`;
+
+          const color = document.querySelector(myCLass).style.background;
+          if (color === "red") {
+            console.log("Puerta inactiva");
+            return;
+          }
+          if (color === "green") {
+            document.querySelector(myCLass).style.background = "gray";
+          } else document.querySelector(myCLass).style.background = "green";
+        }
+      });
 
       function onWindowResize() {
         const aspect = window.innerWidth / window.innerHeight;
