@@ -4,8 +4,24 @@ export const locker = {
   ipAdress: "local",
 };
 
-const length = 200;
-const width = 90;
+const increment = 2.5;
+const length = 150;
+const width = 80;
+
+const createDoors = (column, q) => {
+  let doors = [];
+  for (let i = 0; i < q; i++) {
+    doors.push({
+      width: 44,
+      height: 33,
+      length: 80,
+      status: "active",
+      doorNumber: i + 1,
+      column: column,
+    });
+  }
+  return doors;
+};
 
 const column0Doors = [
   {
@@ -44,51 +60,51 @@ const column1Doors = [
 export const locker2 = {
   bodies: [
     {
-      width: 80,
-      height: 185,
-      length: 60,
+      width: 80 * increment,
+      height: 185 * increment,
+      length: 60 * increment,
       columns: [
         {
-          width: 26,
-          height: 180,
-          length: 60,
-          doors: column0Doors,
+          width: 26 * increment,
+          height: 180 * increment,
+          length: 60 * increment,
+          doors: createDoors(1, 12),
         },
         {
-          width: 26,
-          height: 180,
-          length: 60,
-          doors: column1Doors,
+          width: 26 * increment,
+          height: 180 * increment,
+          length: 60 * increment,
+          doors: createDoors(2, 12),
         },
         {
-          width: 26,
-          height: 180,
-          length: 60,
-          doors: column1Doors,
+          width: 26 * increment,
+          height: 180 * increment,
+          length: 60 * increment,
+          doors: createDoors(3, 12),
         },
       ],
     },
     {
-      width: 80,
-      height: 185,
-      length: 60,
+      width: 80 * increment,
+      height: 185 * increment,
+      length: 60 * increment,
       columns: [
         {
-          width: 26,
-          height: 180,
-          length: 60,
+          width: 26 * increment,
+          height: 180 * increment,
+          length: 60 * increment,
           doors: column0Doors,
         },
         {
-          width: 26,
-          height: 180,
-          length: 60,
+          width: 26 * increment,
+          height: 180 * increment,
+          length: 60 * increment,
           doors: column1Doors,
         },
         {
-          width: 26,
-          height: 180,
-          length: 60,
+          width: 26 * increment,
+          height: 180 * increment,
+          length: 60 * increment,
           doors: column1Doors,
         },
       ],
@@ -109,7 +125,7 @@ export const lockerDoors = [
   {
     doorNumber: 2,
     width: width,
-    height: "50",
+    height: "33",
     length: length,
     status: "active",
     column: 1,
@@ -117,7 +133,7 @@ export const lockerDoors = [
   {
     doorNumber: 3,
     width: width,
-    height: "22",
+    height: "33",
     length: length,
     status: "active",
     column: 1,
@@ -126,7 +142,7 @@ export const lockerDoors = [
   {
     doorNumber: 4,
     width: width,
-    height: "23",
+    height: "33",
     length: length,
     status: "active",
     column: 1,
@@ -134,7 +150,7 @@ export const lockerDoors = [
   {
     doorNumber: 5,
     width: width,
-    height: "35",
+    height: "33",
     length: length,
     status: "inactive",
     column: 1,
@@ -142,7 +158,15 @@ export const lockerDoors = [
   {
     doorNumber: 6,
     width: width,
-    height: "23",
+    height: "33",
+    length: length,
+    status: "active",
+    column: 1,
+  },
+  {
+    doorNumber: 7,
+    width: width,
+    height: "33",
     length: length,
     status: "active",
     column: 1,
@@ -150,10 +174,10 @@ export const lockerDoors = [
   {
     doorNumber: 8,
     width: width,
-    height: "40",
+    height: "33",
     length: length,
     status: "active",
-    column: 2,
+    column: 1,
   },
   {
     doorNumber: 9,
@@ -161,72 +185,72 @@ export const lockerDoors = [
     height: "33",
     length: length,
     status: "active",
-    column: 2,
+    column: 1,
   },
   {
     doorNumber: 10,
     width: width,
-    height: "30",
+    height: "33",
     length: length,
     status: "active",
-    column: 2,
+    column: 1,
   },
   ,
   {
     doorNumber: 11,
     width: width,
-    height: "23",
+    height: "33",
     length: length,
     status: "active",
-    column: 2,
+    column: 1,
   },
   {
     doorNumber: 12,
     width: width,
-    height: "55",
+    height: "33",
+    length: length,
+    status: "active",
+    column: 1,
+  },
+  {
+    doorNumber: 13,
+    width: width,
+    height: "33",
     length: length,
     status: "active",
     column: 2,
   },
   {
-    doorNumber: 13,
-    width: width,
-    height: "55",
-    length: length,
-    status: "active",
-    column: 3,
-  },
-  {
     doorNumber: 14,
     width: width,
-    height: "55",
+    height: "33",
     length: length,
     status: "active",
-    column: 3,
+    column: 2,
   },
   {
     doorNumber: 15,
     width: width,
-    height: "55",
+    height: "33",
     length: length,
     status: "active",
-    column: 3,
+    column: 2,
   },
   {
     doorNumber: 16,
     width: width,
-    height: "55",
+    height: "33",
     length: length,
     status: "active",
-    column: 3,
+    column: 2,
   },
   {
     doorNumber: 17,
     width: width,
-    height: "44",
+    height: "33",
     length: length,
     status: "active",
-    column: 4,
+    column: 2,
   },
   {
     doorNumber: 18,
@@ -234,7 +258,55 @@ export const lockerDoors = [
     height: "33",
     length: length,
     status: "inactive",
-    column: 4,
+    column: 2,
+  },
+  {
+    doorNumber: 19,
+    width: width,
+    height: "33",
+    length: length,
+    status: "active",
+    column: 2,
+  },
+  {
+    doorNumber: 20,
+    width: width,
+    height: "33",
+    length: length,
+    status: "inactive",
+    column: 2,
+  },
+  {
+    doorNumber: 21,
+    width: width,
+    height: "33",
+    length: length,
+    status: "active",
+    column: 2,
+  },
+  {
+    doorNumber: 22,
+    width: width,
+    height: "33",
+    length: length,
+    status: "inactive",
+    column: 2,
+  },
+  {
+    doorNumber: 23,
+    width: width,
+    height: "33",
+    length: length,
+    status: "active",
+    column: 2,
+  },
+  {
+    doorNumber: 24,
+    width: width,
+    height: "33",
+    length: length,
+    status: "active",
+    column: 2,
   },
 ];
 
