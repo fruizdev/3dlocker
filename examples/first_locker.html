@@ -78,14 +78,18 @@
           side: THREE.DoubleSide,
         });
 
-        const doorColors = { front: "gray", sides: "white", back: "black" };
+        const doorColors = { front: "blue", sides: "red", back: "pink" };
 
+        console.log("locker2", locker2);
         locker2.bodies.forEach((body, key1) => {
           console.log("body", key1 + 1);
+          drawBody(body, key1);
           body.columns.forEach((column, key2) => {
             console.log("column", key2 + 1);
-            column.doors.forEach((door) => {
-              console.log("door", door.doorNumber);
+            drawColumn(column, key2);
+            column.doors.forEach((door, key3) => {
+              // console.log("door", door.doorNumber);
+              drawDoor2(door, key3, column);
             });
           });
         });
@@ -97,11 +101,13 @@
         const columns = [...new Set(lockerDoors.map((d) => d.column))].filter(
           (c) => c !== undefined
         );
+
         const isPairColumns = columns.length % 2 == 0;
         const middleColumn = !isPairColumns
           ? (columns.length - 1) / 2 + 1
           : null;
 
+        /*
         for (let c = 0; c < columns.length; c++) {
           const columnDoors = lockerDoors.filter(
             (d) => d.column === columns[c]
@@ -126,7 +132,7 @@
             drawDoor(door, doorColors, { x, y, z: 0 });
           }
         }
-
+ */
         // floor
         createPlane(
           500,
@@ -140,7 +146,7 @@
         createPlane(
           500,
           400,
-          "blue",
+          "white",
           new THREE.Vector3(0, 100, -110),
           new THREE.Euler(0, 0, 0)
         );
@@ -283,6 +289,51 @@
         window.addEventListener("resize", onWindowResize);
       }
 
+      function drawBody(body, key) {
+        const { width, length, height } = body;
+        const x = 33 + width * key;
+        const y = 0;
+        const z = 0;
+        const geometry = new THREE.BoxGeometry(width, height, length);
+        const material = new THREE.MeshBasicMaterial({
+          color: "#BDBDAD",
+          wireframe: true,
+        });
+        const cube = new THREE.Mesh(geometry, material);
+        cube.position.set(x, y, z);
+        scene.add(cube);
+      }
+
+      function drawColumn(column, key) {
+        const { width, length, height } = column;
+        const x = width * key;
+        const y = 0;
+        const z = 0;
+        const geometry = new THREE.BoxGeometry(width, height, length);
+        const material = new THREE.MeshBasicMaterial({
+          color: 0x00ff00,
+          wireframe: true,
+        });
+        const cube = new THREE.Mesh(geometry, material);
+        cube.position.set(x, y, z);
+        scene.add(cube);
+      }
+
+      function drawDoor2(door, key, column) {
+        const { width, length, height } = door;
+        const x = column * width;
+        const y = height * key + 10;
+        const z = 0;
+        const geometry = new THREE.BoxGeometry(width, height, length);
+        const material = new THREE.MeshBasicMaterial({
+          color: "black",
+          wireframe: true,
+        });
+        const cube = new THREE.Mesh(geometry, material);
+        cube.position.set(x, y, z);
+        scene.add(cube);
+      }
+
       window.addEventListener("click", (e) => {
         const targetClass = e.target.classList[0];
         console.log("targetClass", targetClass);
@@ -290,6 +341,7 @@
         if (targetClass.includes("my-door-class-")) {
           const doorNumber = targetClass.split("-").pop("");
           const myCLass = `.my-door-class-${doorNumber}`;
+          console.log("myCLass", myCLass);
 
           const color = document.querySelector(myCLass).style.background;
           if (color === "red") {

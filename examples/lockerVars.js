@@ -4,8 +4,24 @@ export const locker = {
   ipAdress: "local",
 };
 
+const increment = 2.5;
 const length = 150;
-const width = 60;
+const width = 80;
+
+const createDoors = (column, q) => {
+  let doors = [];
+  for (let i = 0; i < q; i++) {
+    doors.push({
+      width: 44,
+      height: 33,
+      length: 80,
+      status: "active",
+      doorNumber: i + 1,
+      column: column,
+    });
+  }
+  return doors;
+};
 
 const column0Doors = [
   {
@@ -44,51 +60,51 @@ const column1Doors = [
 export const locker2 = {
   bodies: [
     {
-      width: 80,
-      height: 185,
-      length: 60,
+      width: 80 * increment,
+      height: 185 * increment,
+      length: 60 * increment,
       columns: [
         {
-          width: 26,
-          height: 180,
-          length: 60,
-          doors: column0Doors,
+          width: 26 * increment,
+          height: 180 * increment,
+          length: 60 * increment,
+          doors: createDoors(1, 12),
         },
         {
-          width: 26,
-          height: 180,
-          length: 60,
-          doors: column1Doors,
+          width: 26 * increment,
+          height: 180 * increment,
+          length: 60 * increment,
+          doors: createDoors(2, 12),
         },
         {
-          width: 26,
-          height: 180,
-          length: 60,
-          doors: column1Doors,
+          width: 26 * increment,
+          height: 180 * increment,
+          length: 60 * increment,
+          doors: createDoors(3, 12),
         },
       ],
     },
     {
-      width: 80,
-      height: 185,
-      length: 60,
+      width: 80 * increment,
+      height: 185 * increment,
+      length: 60 * increment,
       columns: [
         {
-          width: 26,
-          height: 180,
-          length: 60,
+          width: 26 * increment,
+          height: 180 * increment,
+          length: 60 * increment,
           doors: column0Doors,
         },
         {
-          width: 26,
-          height: 180,
-          length: 60,
+          width: 26 * increment,
+          height: 180 * increment,
+          length: 60 * increment,
           doors: column1Doors,
         },
         {
-          width: 26,
-          height: 180,
-          length: 60,
+          width: 26 * increment,
+          height: 180 * increment,
+          length: 60 * increment,
           doors: column1Doors,
         },
       ],
