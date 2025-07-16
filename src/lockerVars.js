@@ -7,95 +7,6 @@ export const locker = {
 const length = 200;
 const width = 90;
 
-const column0Doors = [
-  {
-    width: 33,
-    height: 33,
-    length: 33,
-    status: "active",
-    doorNumber: 1,
-  },
-  {
-    width: 33,
-    height: 33,
-    length: 33,
-    status: "active",
-    doorNumber: 2,
-  },
-];
-
-const column1Doors = [
-  {
-    w: 33,
-    h: 33,
-    l: 33,
-    status: "active",
-    doorNumber: 3,
-  },
-  {
-    width: 33,
-    height: 33,
-    length: 33,
-    status: "active",
-    doorNumber: 4,
-  },
-];
-
-export const locker2 = {
-  bodies: [
-    {
-      width: 80,
-      height: 185,
-      length: 60,
-      columns: [
-        {
-          width: 26,
-          height: 180,
-          length: 60,
-          doors: column0Doors,
-        },
-        {
-          width: 26,
-          height: 180,
-          length: 60,
-          doors: column1Doors,
-        },
-        {
-          width: 26,
-          height: 180,
-          length: 60,
-          doors: column1Doors,
-        },
-      ],
-    },
-    {
-      width: 80,
-      height: 185,
-      length: 60,
-      columns: [
-        {
-          width: 26,
-          height: 180,
-          length: 60,
-          doors: column0Doors,
-        },
-        {
-          width: 26,
-          height: 180,
-          length: 60,
-          doors: column1Doors,
-        },
-        {
-          width: 26,
-          height: 180,
-          length: 60,
-          doors: column1Doors,
-        },
-      ],
-    },
-  ],
-};
-
 export const lockerDoors = [
   {
     doorNumber: 1,
@@ -181,20 +92,29 @@ export const lockerDoors = [
     column: 2,
   },
   {
+    doorNumber:0,
+    width: width,
+    height: "200",
+    length: length,
+    status: "inactive",   
+    column: 3,
+  },
+  {
     doorNumber: 12,
     width: width,
     height: "55",
     length: length,
     status: "inactive",
-    column: 2,
+    column: 4,
   },
+
   {
     doorNumber: 13,
     width: width,
     height: "55",
     length: length,
     status: "active",
-    column: 3,
+    column: 4,
   },
   {
     doorNumber: 14,
@@ -202,7 +122,7 @@ export const lockerDoors = [
     height: "55",
     length: length,
     status: "active",
-    column: 3,
+    column: 4,
   },
   {
     doorNumber: 15,
@@ -210,7 +130,7 @@ export const lockerDoors = [
     height: "55",
     length: length,
     status: "active",
-    column: 3,
+    column: 4,
   },
   {
     doorNumber: 16,
@@ -218,7 +138,7 @@ export const lockerDoors = [
     height: "55",
     length: length,
     status: "active",
-    column: 3,
+    column: 5,
   },
   {
     doorNumber: 17,
@@ -226,7 +146,7 @@ export const lockerDoors = [
     height: "44",
     length: length,
     status: "active",
-    column: 4,
+    column: 5,
   },
   {
     doorNumber: 18,
@@ -234,9 +154,10 @@ export const lockerDoors = [
     height: "33",
     length: length,
     status: "inactive",
-    column: 4,
+    column: 5,
   },
 ];
+
 
 export const createBox = () => {
   let scale = { x: 6, y: 6, z: 6 };

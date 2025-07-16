@@ -43,27 +43,37 @@ function Locker3D() {
     const columns = [...new Set(lockerDoors.map((d) => d.column))].filter(
       (c) => c !== undefined
     );
-    const isPairColumns = columns.length % 2 === 0;
-    const middleColumn = !isPairColumns ? (columns.length - 1) / 2 + 1 : null;
+    // Validate sum of door heights per column
+    columns.forEach((col) => {
+      const columnDoors = lockerDoors.filter((d) => d.column === col);
+      const sumHeights = columnDoors.reduce((acc, d) => acc + parseInt(d.height), 0);
+      if (sumHeights !== 200 && col !== 0) {
+        console.error(`Column ${col}: sum of door heights is ${sumHeights}, expected 200.`);
+      }
+    });
     for (let c = 0; c < columns.length; c++) {
+      // Draw all columns except column 0, one next to the other
       const columnDoors = lockerDoors.filter((d) => d.column === columns[c]);
       let acc = 0;
+      // Position columns in a row, left to right
+      let x = (c - (columns.includes(0) ? 1 : 0)) * (width + 2); // 2px gap, skip 0
+      // Move all columns left by 50% of total width and down by 10% of maxColumnHeight
+      let xOffset = -0.5 * columns.length * (width + 2);
+      let yOffset = -0.1 * maxColumnHeight;
       for (let i = 0; i < columnDoors.length; i++) {
         const door = columnDoors[i];
         const h = parseInt(door.height);
-        const column = parseInt(door.column);
-        let x = 0;
-        if (middleColumn && middleColumn === column) {
-          x = 0;
-        } else {
-          if (column <= columns.length / 2) x = -(column * 100);
-          else x = column * width - 150;
-        }
         acc = acc + h;
-        let y = maxColumnHeight - acc + h / 2;
-        drawDoor(door, doorColors, { x, y, z: 0 }, material, scene, scene2);
+        let y = maxColumnHeight - acc + h / 2 + yOffset;
+        // Use a special color for door number 0
+        const isDoorZero = door.doorNumber === 0;
+        const customDoorColors = isDoorZero
+          ? { ...doorColors, front: '#87cefa' } // light blue
+          : doorColors;
+        drawDoor(door, customDoorColors, { x: x + xOffset, y, z: 0 }, material, scene, scene2);
       }
     }
+
     // floor
     createPlane(
       500,
