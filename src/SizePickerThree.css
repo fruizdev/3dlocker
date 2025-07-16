@@ -1,0 +1,22 @@
+/* SizePickerThree.css */
+.sizepicker-three-root {
+  width: 100%;
+  height: 400px;
+  background: #181818;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.sizepicker-three-root canvas {
+  border-radius: 12px;
+}
+
+.sizepicker-three-root .door-label {
+  position: absolute;
+  color: #fff;
+  font-size: 1.1em;
+  pointer-events: none;
+  text-shadow: 0 1px 4px #000;
+}

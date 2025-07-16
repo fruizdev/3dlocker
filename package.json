@@ -15,13 +15,11 @@
     "./src/*": "./src/*",
     "./nodes": "./examples/jsm/nodes/Nodes.js"
   },
-
   "scripts": {
-    "start": "npm run dev",
-    "build": "rollup -c utils/build/rollup.config.js",
-    "build-module": "ONLY_MODULE=true rollup -c utils/build/rollup.config.js",
-    "build-examples": "rollup -c utils/build/rollup.examples.config.js && echo '\nFormatting...' && eslint examples/js --ext js --ignore-pattern libs --ignore-pattern ifc --fix",
-    "dev": "concurrently --names \"ROLLUP,HTTP\" -c \"bgBlue.bold,bgGreen.bold\" \"rollup -c utils/build/rollup.config.js -w -m inline\" \"servez -p 8080\""
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "repository": {
     "type": "git",
@@ -32,7 +30,6 @@
   "bugs": {
     "url": "https://github.com/fruizdev/3dlocker/issues"
   },
-  "homepage": "https://github.com/fruizdev/3dlocker#readme",
   "dependencies": {
     "@babel/core": "^7.19.3",
     "@babel/eslint-parser": "^7.19.1",
@@ -47,10 +44,26 @@
     "eslint-plugin-compat": "^4.0.2",
     "eslint-plugin-html": "^7.1.0",
     "eslint-plugin-import": "^2.26.0",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "react-scripts": "^5.0.1",
     "rollup": "^2.79.1",
     "rollup-plugin-filesize": "^9.1.2",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-visualizer": "^5.8.2",
-    "servez": "^1.14.1"
+    "servez": "^1.14.1",
+    "three": "^0.146.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
