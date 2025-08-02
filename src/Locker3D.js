@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
-import { lockerDoors } from './lockerVars.js';
+import { locker, doors } from './data/db.js';
 import './main.css';
 
 const frustumSize = 800;
@@ -37,34 +37,43 @@ function Locker3D() {
       side: THREE.DoubleSide,
     });
     const doorColors = { front: 'orange', sides: 'white', back: 'black' };
-    const maxColumnHeight = 200;
+
     const length = 200;
     const width = 90;
-    const columns = [...new Set(lockerDoors.map((d) => d.column))].filter(
+    const columns = [...new Set(doors.map((d) => d.column))].filter(
       (c) => c !== undefined
     );
+    // order columns by number
+    columns.sort((a, b) => a - b);
+
     // Validate sum of door heights per column
     columns.forEach((col) => {
-      const columnDoors = lockerDoors.filter((d) => d.column === col);
+      const columnDoors = doors.filter((d) => d.column === col);
       const sumHeights = columnDoors.reduce((acc, d) => acc + parseInt(d.height), 0);
-      if (sumHeights !== 200 && col !== 0) {
-        console.error(`Column ${col}: sum of door heights is ${sumHeights}, expected 200.`);
+      const doorIndexes = columnDoors.map((d) => d.doorNumber);
+
+      if (sumHeights === locker.height && col !== 0) {
+        doorIndexes.forEach(i => {
+          doors[i] ? doors[i].match = true : null;
+        });
       }
+      else console.error(`Column ${col} does not match locker height: ${sumHeights} != ${locker.height}`);
     });
+
     for (let c = 0; c < columns.length; c++) {
       // Draw all columns except column 0, one next to the other
-      const columnDoors = lockerDoors.filter((d) => d.column === columns[c]);
+      const columnDoors = doors.filter((d) => d.column === columns[c]);
       let acc = 0;
       // Position columns in a row, left to right
       let x = (c - (columns.includes(0) ? 1 : 0)) * (width + 2); // 2px gap, skip 0
-      // Move all columns left by 50% of total width and down by 10% of maxColumnHeight
+      // Move all columns left by 50% of total width and down by 10% of locker.height
       let xOffset = -0.5 * columns.length * (width + 2);
-      let yOffset = -0.1 * maxColumnHeight;
+      let yOffset = -0.1 * locker.height;
       for (let i = 0; i < columnDoors.length; i++) {
         const door = columnDoors[i];
         const h = parseInt(door.height);
         acc = acc + h;
-        let y = maxColumnHeight - acc + h / 2 + yOffset;
+        let y = locker.height - acc + h / 2 + yOffset;
         // Use a special color for door number 0
         const isDoorZero = door.doorNumber === 0;
         const customDoorColors = isDoorZero
@@ -187,6 +196,9 @@ function Locker3D() {
 function drawDoor(door, doorColors, pos, material, scene, scene2) {
   let wh = door.width / 2;
   let hh = door.height / 2;
+
+  const borderColor = !door.match ? 'red' : 'white';
+
   // left
   createPlane(
     door.length,
@@ -199,7 +211,8 @@ function drawDoor(door, doorColors, pos, material, scene, scene2) {
     undefined,
     material,
     scene,
-    scene2
+    scene2,
+    borderColor
   );
   // back
   createPlane(
@@ -213,7 +226,8 @@ function drawDoor(door, doorColors, pos, material, scene, scene2) {
     undefined,
     material,
     scene,
-    scene2
+    scene2,
+    borderColor
   );
   // right
   createPlane(
@@ -227,7 +241,8 @@ function drawDoor(door, doorColors, pos, material, scene, scene2) {
     undefined,
     material,
     scene,
-    scene2
+    scene2,
+    borderColor
   );
   // front
   createPlane(
@@ -241,7 +256,8 @@ function drawDoor(door, doorColors, pos, material, scene, scene2) {
     door,
     material,
     scene,
-    scene2
+    scene2,
+    borderColor
   );
   // top
   createPlane(
@@ -255,7 +271,8 @@ function drawDoor(door, doorColors, pos, material, scene, scene2) {
     undefined,
     material,
     scene,
-    scene2
+    scene2,
+    borderColor
   );
   // bottom
   createPlane(
@@ -269,17 +286,20 @@ function drawDoor(door, doorColors, pos, material, scene, scene2) {
     undefined,
     material,
     scene,
-    scene2
+    scene2,
+    borderColor
   );
 }
 
-function createPlane(width, height, cssColor, pos, rot, number, status, door, material, scene, scene2) {
+function createPlane(width, height, cssColor, pos, rot, number, status, door, material, scene, scene2, borderColor) {
+  // Accept borderColor as last argument (default to black)
+  //const borderColor = arguments.length > 12 ? arguments[12] : 'black';
   const element = document.createElement('div');
   element.style.width = width + 'px';
   element.style.height = height + 'px';
   element.style.opacity = door ? 1 : 0.75;
   element.style.background = cssColor;
-  element.style.border = '1px dotted black';
+  element.style.border = `2px solid ${borderColor}`;
   if (number && status) {
     var numberText = document.createTextNode(`${number}`);
     element.classList.add(`my-door-class-${number}`);
