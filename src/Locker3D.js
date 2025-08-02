@@ -9,6 +9,53 @@ const frustumSize = 800;
 const initialCameraPosition = new THREE.Vector3(30, 20, 100);
 
 function Locker3D() {
+  // Store frontal meshes for raycaster
+  const frontalMeshesRef = useRef([]);
+
+  // Add raycaster click detection for frontal faces only
+  useEffect(() => {
+    function onWebGLClick(event) {
+      // Use the latest renderer and camera from threeRef
+      const renderer = threeRef.current.renderer;
+      const camera = threeRef.current.camera;
+      if (!renderer || !camera) return;
+      // Get mouse position in normalized device coordinates
+      const rect = renderer.domElement.getBoundingClientRect();
+      const mouse = new THREE.Vector2();
+      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      // Raycaster
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(mouse, camera);
+      // Only check frontal meshes
+      const frontalMeshes = frontalMeshesRef.current || [];
+      if (frontalMeshes.length === 0) return;
+      const intersects = raycaster.intersectObjects(frontalMeshes, false);
+      if (intersects.length > 0) {
+        const mesh = intersects[0].object;
+        if (mesh.userData && mesh.userData.door) {
+          alert('Frontal face clicked! Door data: ' + JSON.stringify(mesh.userData.door));
+          console.log('Frontal face clicked, door data:', mesh.userData.door);
+        } else {
+          alert('Frontal face mesh clicked!');
+          console.log('Frontal face mesh clicked:', mesh);
+        }
+      }
+    }
+    // Attach listener after renderer is created
+    const interval = setInterval(() => {
+      if (threeRef.current.renderer && threeRef.current.renderer.domElement) {
+        threeRef.current.renderer.domElement.addEventListener('click', onWebGLClick);
+        clearInterval(interval);
+      }
+    }, 100);
+    return () => {
+      if (threeRef.current.renderer && threeRef.current.renderer.domElement) {
+        threeRef.current.renderer.domElement.removeEventListener('click', onWebGLClick);
+      }
+      clearInterval(interval);
+    };
+  }, []);
   const mountRef = useRef();
   const threeRef = useRef({});
   const inactivityTimeout = useRef();
@@ -91,8 +138,6 @@ function Locker3D() {
       new THREE.Vector3(0, -100, 90),
       new THREE.Euler(-90 * THREE.MathUtils.DEG2RAD, 0, 0),
       undefined,
-      undefined,
-      undefined,
       material,
       scene,
       scene2
@@ -104,8 +149,6 @@ function Locker3D() {
       'gray',
       new THREE.Vector3(0, 100, -110),
       new THREE.Euler(0, 0, 0),
-      undefined,
-      undefined,
       undefined,
       material,
       scene,
@@ -176,7 +219,7 @@ function Locker3D() {
       renderer2.setSize(window.innerWidth, window.innerHeight);
     }
     window.addEventListener('resize', onWindowResize);
-    threeRef.current = { renderer, renderer2, animationId: threeRef.current.animationId };
+    threeRef.current = { renderer, renderer2, camera, animationId: threeRef.current.animationId };
     return () => {
       window.removeEventListener('click', handleWindowClick);
       window.removeEventListener('mousemove', resetInactivityTimer);
@@ -196,7 +239,6 @@ function Locker3D() {
 function drawDoor(door, doorColors, pos, material, scene, scene2) {
   let wh = door.width / 2;
   let hh = door.height / 2;
-
   const borderColor = !door.match ? 'red' : 'white';
 
   // left
@@ -206,8 +248,6 @@ function drawDoor(door, doorColors, pos, material, scene, scene2) {
     doorColors.sides,
     new THREE.Vector3(-wh + pos.x, 0 + pos.y, 0 + pos.z),
     new THREE.Euler(0, -90 * THREE.MathUtils.DEG2RAD, 0),
-    undefined,
-    undefined,
     undefined,
     material,
     scene,
@@ -222,8 +262,6 @@ function drawDoor(door, doorColors, pos, material, scene, scene2) {
     new THREE.Vector3(0 + pos.x, 0 + pos.y, -wh + pos.z - door.length / 4),
     new THREE.Euler(0, 0, -90 * THREE.MathUtils.DEG2RAD),
     undefined,
-    undefined,
-    undefined,
     material,
     scene,
     scene2,
@@ -237,28 +275,28 @@ function drawDoor(door, doorColors, pos, material, scene, scene2) {
     new THREE.Vector3(wh + pos.x, 0 + pos.y, 0 + pos.z),
     new THREE.Euler(0, -90 * THREE.MathUtils.DEG2RAD, 0),
     undefined,
-    undefined,
-    undefined,
     material,
     scene,
     scene2,
     borderColor
   );
-  // front
-  createPlane(
+  // front (store mesh for raycaster)
+  const frontalMesh = createPlane(
     door.width,
     door.height,
     doorColors.front,
     new THREE.Vector3(0 + pos.x, 0 + pos.y, wh + pos.z + door.length / 4),
     new THREE.Euler(0, 0, 0),
-    door.doorNumber,
-    door.status,
     door,
     material,
     scene,
     scene2,
-    borderColor
+    borderColor,
+    true // isFrontal
   );
+  if (frontalMesh) {
+    frontalMeshesRef.current.push(frontalMesh);
+  }
   // top
   createPlane(
     door.width,
@@ -266,8 +304,6 @@ function drawDoor(door, doorColors, pos, material, scene, scene2) {
     doorColors.sides,
     new THREE.Vector3(0 + pos.x, hh + pos.y, 0 + pos.z),
     new THREE.Euler(-90 * THREE.MathUtils.DEG2RAD, 0, 0),
-    undefined,
-    undefined,
     undefined,
     material,
     scene,
@@ -282,8 +318,6 @@ function drawDoor(door, doorColors, pos, material, scene, scene2) {
     new THREE.Vector3(0 + pos.x, -hh + pos.y, 0 + pos.z),
     new THREE.Euler(-90 * THREE.MathUtils.DEG2RAD, 0, 0),
     undefined,
-    undefined,
-    undefined,
     material,
     scene,
     scene2,
@@ -291,21 +325,31 @@ function drawDoor(door, doorColors, pos, material, scene, scene2) {
   );
 }
 
-function createPlane(width, height, cssColor, pos, rot, number, status, door, material, scene, scene2, borderColor) {
-  // Accept borderColor as last argument (default to black)
-  //const borderColor = arguments.length > 12 ? arguments[12] : 'black';
+function createPlane(
+  width,
+  height,
+  cssColor,
+  pos,
+  rot,
+  door,
+  material,
+  scene,
+  scene2,
+  borderColor,
+  isFrontal = false) {
+
   const element = document.createElement('div');
   element.style.width = width + 'px';
   element.style.height = height + 'px';
   element.style.opacity = door ? 1 : 0.75;
   element.style.background = cssColor;
-  element.style.border = `2px solid ${borderColor}`;
-  if (number && status) {
-    var numberText = document.createTextNode(`${number}`);
-    element.classList.add(`my-door-class-${number}`);
+  element.style.border = `4px solid ${borderColor}`;
+  if (door && door.doorNumber && door.status) {
+    var numberText = document.createTextNode(`${door.doorNumber}`);
+    element.classList.add(`my-door-class-${door.doorNumber}`);
     element.appendChild(numberText);
-    var statusText = document.createTextNode(`${number}`);
-    statusText.textContent = status === 'active' ? ' activa' : ' inactiva';
+    var statusText = document.createTextNode(`${door.doorNumber}`);
+    statusText.textContent = door.status === 'active' ? ' activa' : ' inactiva';
     element.appendChild(statusText);
     if (door.status === 'inactive') element.style.background = 'red';
     else if (door.open) {
@@ -313,10 +357,6 @@ function createPlane(width, height, cssColor, pos, rot, number, status, door, ma
     } else {
       element.style.background = 'orange';
     }
-    element.addEventListener('click', function (event) {
-      event.stopPropagation();
-      alert(`Puerta ${number} clickeada`);
-    });
   }
   const object = new CSS3DObject(element);
   object.position.copy(pos);
@@ -326,7 +366,17 @@ function createPlane(width, height, cssColor, pos, rot, number, status, door, ma
   const mesh = new THREE.Mesh(geometry, material);
   mesh.position.copy(object.position);
   mesh.rotation.copy(object.rotation);
+  // Attach door data for raycaster click detection
+  if (door && door.doorNumber && door.status) {
+    mesh.userData.door = door;
+  }
   scene.add(mesh);
+  // Return mesh only if this is the frontal face
+  if (isFrontal) {
+    return mesh;
+  }
+  // Always return undefined for non-frontal faces
+  return undefined;
 }
 
 export default Locker3D;
